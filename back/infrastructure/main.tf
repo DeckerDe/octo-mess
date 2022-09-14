@@ -23,6 +23,7 @@ resource "aws_ecs_service" "this" {
 
   deployment_minimum_healthy_percent = 0
 
+  
   desired_count = 1
 
   launch_type = local.launch_type
@@ -32,6 +33,6 @@ resource "aws_ecs_service" "this" {
   network_configuration {
     assign_public_ip = true
     security_groups = [aws_security_group.fargate.id]
-    subnets = [aws_subnet.main.id]
+    subnets = [module.fargate_vpc.public_subnets[0]]
   }
 }

@@ -1,17 +1,21 @@
-resource "aws_vpc" "fargateVpc" {
-  cidr_block = "10.0.0.0/16"
+module "fargate_vpc" {
+  source = "terraform-aws-modules/vpc/aws"
 
-  enable_dns_hostnames = true
-}
+  name = "fargatson-vpc"
+  cidr = "10.0.0.0/16"
 
-resource "aws_subnet" "main" {
-  vpc_id = aws_vpc.fargateVpc.id
-  cidr_block = "10.0.1.0/24"
+  azs             = ["sa-east-1a", "sa-east-1b", "sa-east-1c"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
+
+  enable_nat_gateway     = true
+  enable_dns_hostnames   = true
+  one_nat_gateway_per_az = true
 }
 
 resource "aws_security_group" "fargate" {
   name = "fargatesg"
-  vpc_id = aws_vpc.fargateVpc.id
+  vpc_id = module.fargate_vpc.vpc_id
 
   ingress {
     from_port = 80
