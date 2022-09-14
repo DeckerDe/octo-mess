@@ -54,7 +54,8 @@ resource "aws_iam_role" "fargatson_task_exec_role"{
   })
 }
 
-resource "aws_iam_policy_attachment" "ecs-task-ecec-role-att" {
-  name       = "ecs-task-prole-att"
-  policy_arn = aws_iam_role.fargatson_task_exec_role.arn
+resource "aws_iam_policy_attachment" "ecs-task-exec-role-att" {
+  name       = "ecs-task-policy-role-att"
+  roles = [aws_iam_role.fargatson_task_exec_role.name]
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
