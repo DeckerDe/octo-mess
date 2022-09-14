@@ -36,26 +36,3 @@ resource "aws_ecs_service" "this" {
     subnets = [module.fargate_vpc.public_subnets[0]]
   }
 }
-
-resource "aws_iam_role" "fargatson_task_exec_role"{
-  name="${local.application_name}-ecsTaskExecutionRole"
-
-  assume_role_policy = jsonencode({
-    Version: "2012-10-17",
-    Statement:[
-      {
-        Action: "sts:AssumeRole",
-        Principal: {
-          Service: "ecs-tasks.amazonaws.com"
-        },
-        Effect: "Allow",
-        Sid: ""
-      }]
-  })
-}
-
-resource "aws_iam_policy_attachment" "ecs-task-exec-role-att" {
-  name       = "ecs-task-policy-role-att"
-  roles = [aws_iam_role.fargatson_task_exec_role.name]
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
